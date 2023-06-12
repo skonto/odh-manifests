@@ -21,18 +21,13 @@ Contains the runtime manifests for KServe.
 
 ## Original manifests
 
-KServe also uses `kustomize` so we can directly use [their manifests](https://github.com/kserve/kserve/tree/master/config).
+KServe also uses `kustomize` so we can directly use [their manifests](https://github.com/opendatahub-io/kserve/tree/master/config).
 
 * `default` is the entrypoint for CRDs, KServe controller and RBAC resources.
 * `runtimes` is the second entrypoint for the KServe runtimes. They are referenced separately, as these are not namespaced.
 
-### Updating the KServe manifests
+The KServe manifests are directly referenced in our [overlays](#overlays).
 
-Use the script in `hack` to update the KServe manifests:
-
-```bash
-./hack/update-kserve-manifests.sh
-```
 
 ## Overlays
 
