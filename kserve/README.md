@@ -1,9 +1,9 @@
 # KServe
 
-KServe comes with two component:
+KServe comes with one component:
 
 1. [KServe](#KServe)
-2. [KServe runtimes](#KServe-Runtimes)
+
 
 ## KServe
 
@@ -12,32 +12,41 @@ Contains deployment manifests for the KServe controller.
 - [kserve-controller](https://github.com/opendatahub-io/kserve)
   - Forked upstream kserve/kserve repository
 
-## KServe runtimes
-
-Contains the runtime manifests for KServe.
-
-- [kserve-controller](https://github.com/opendatahub-io/kserve)
-  - Forked upstream kserve/kserve repository
 
 ## Original manifests
 
-KServe also uses `kustomize` so we can directly use [their manifests](https://github.com/opendatahub-io/kserve/tree/master/config).
+> ❗️Note: Unfortunately, `kfctl` used an outdated version of `kustomize` which cannot process some fields in the KServe manifests.  
+> Thus, we are pre-building the KServe manifests to the [kserve-built](./kserve-built) folder. The [overlays](#overlays) then use
+> those pre-built KServe manifests to apply our kustomizations.
+ 
+KServe also uses `kustomize` so we can (indirectly) use [their manifests](https://github.com/opendatahub-io/kserve/tree/master/config).
 
 * `default` is the entrypoint for CRDs, KServe controller and RBAC resources.
-* `runtimes` is the second entrypoint for the KServe runtimes. They are referenced separately, as these are not namespaced.
+* `runtimes` is the second entrypoint for the KServe runtimes. As ODH does not support cluster scoped runtimes, those are omitted.
 
-The KServe manifests are directly referenced in our [overlays](#overlays).
+The [pre-built KServe manifests](./kserve-built/kserve-built.yaml) are directly referenced in our [overlays](#overlays).
+
+### Updating the manifests
+
+Run the script in [hack](./hack) to manually update the pre-built manifests from the upstream manifests. [this file](./hack/kustomization.yaml) defines the version that is being used:
+
+```bash
+hack/build-kserve-manifests.sh
+```
+```text
+Building KServe manifests
+KServe manifests fetched from upstream and assembled into /odh-manifests/kserve/kserve-built/kserve-built.yaml
+```
 
 
 ## Overlays
 
-There are two overlays defined with the necessary changes for ODH:
+There is an ODH overlay defined with the necessary changes:
 
-* [controller](./odh-overlays/controller)
-* [runtimes](./odh-overlays/runtimes)
+* [controller](./odh-overlays)
 
 
-### Installation process
+## Installation process
 
 Following are the steps to install Model Mesh as a part of OpenDataHub install:
 
@@ -69,7 +78,20 @@ spec:
   version: master
 ```
 
-4. You can now create a new project and create an `InferenceService` CR.
+4. Make sure that you have a runtime defined in your target namespace (you can use a [template](https://github.com/opendatahub-io/odh-dashboard/blob/main/manifests/modelserving/ovms-ootb.yaml) in ODH)
+
+```yaml
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  name: example-runtime
+spec:
+...
+```
+More information in the [KServe docs](https://kserve.github.io/website/0.10/modelserving/servingruntimes/).
+
+5. You can now create a new project and create an `InferenceService` CR.
+
 
 ## Using KServe in ODH
 
@@ -102,6 +124,7 @@ spec:
         name: sklearn
       storageUri: "gs://kfserving-examples/models/sklearn/1.0/model"
 ```
+
 
 ## Limitations
 
