@@ -120,6 +120,7 @@ metadata:
 spec:
   predictor:
     model:
+      runtime: <your-runtime>
       modelFormat:
         name: sklearn
       storageUri: "gs://kfserving-examples/models/sklearn/1.0/model"
