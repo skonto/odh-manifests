@@ -50,9 +50,12 @@ There is an ODH overlay defined with the necessary changes:
 
 Following are the steps to install Model Mesh as a part of OpenDataHub install:
 
-1. Install the OpenDataHub operator
-2. Make sure you install Service Mesh and Serverless components and configure them appropriately
-3. Create a KfDef that includes the KServe components and runtimes
+1. Install the OpenDataHub operator.
+2. Make sure you install Service Mesh and Serverless components and configure them appropriately.
+See [OCP official instructions](https://docs.openshift.com/serverless/1.29/integrations/serverless-ossm-setup.html) and the
+related documentation for [KServe on Openshift](https://github.com/kserve/kserve/blob/master/docs/OPENSHIFT_GUIDE.md#installation-with-service-mesh) 
+from the kserve repo for more.
+3. Create a KfDef that includes the KServe components and runtimes.
 
 ```
 apiVersion: kfdef.apps.kubeflow.org/v1
@@ -78,7 +81,9 @@ spec:
   version: master
 ```
 
-4. Make sure that you have a runtime defined in your target namespace (you can use a [template](https://github.com/opendatahub-io/odh-dashboard/blob/main/manifests/modelserving/ovms-ootb.yaml) in ODH)
+4. You can now create a new project.
+
+5. Make sure that you have a runtime defined in your target namespace (you can use a [template](https://github.com/opendatahub-io/odh-dashboard/blob/main/manifests/modelserving/ovms-ootb.yaml) in ODH).
 
 ```yaml
 apiVersion: serving.kserve.io/v1alpha1
@@ -90,7 +95,7 @@ spec:
 ```
 More information in the [KServe docs](https://kserve.github.io/website/0.10/modelserving/servingruntimes/).
 
-5. You can now create a new project and create an `InferenceService` CR.
+6. Create an `InferenceService` CR in your target namespace.
 
 
 ## Using KServe in ODH
