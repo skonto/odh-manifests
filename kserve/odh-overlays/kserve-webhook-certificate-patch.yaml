@@ -4,6 +4,6 @@ metadata:
   name: serving-cert
   namespace: kserve
 spec:
-  commonName: kserve-webhook-server-service.opendatahub.svc
+  commonName: "kserve-webhook-server-service.$(NAMESPACE).svc"
   dnsNames:
-    - kserve-webhook-server-service.opendatahub.svc
+    - "kserve-webhook-server-service.$(NAMESPACE).svc"

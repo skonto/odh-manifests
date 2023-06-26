@@ -6,6 +6,13 @@ resources:
   - ../kserve-built
   - network-policies.yaml
 
+vars:
+  - name: NAMESPACE
+    objref:
+      apiVersion: v1
+      kind: Namespace
+      name: kserve
+
 patches:
   - path: ./kserve-controller-manager-patch.yaml
   - path: ./inferenceservice-config-patch.yaml
@@ -35,13 +42,13 @@ patches:
   - patch: |-
       - op: add
         path: "/metadata/annotations/cert-manager.io~1inject-ca-from"
-        value: "opendatahub/serving-cert"
+        value: "$(NAMESPACE)/serving-cert"
     target:
       kind: MutatingWebhookConfiguration
   - patch: |-
       - op: add
         path: "/metadata/annotations/cert-manager.io~1inject-ca-from"
-        value: "opendatahub/serving-cert"
+        value: "$(NAMESPACE)/serving-cert"
     target:
       kind: ValidatingWebhookConfiguration
 

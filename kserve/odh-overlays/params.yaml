@@ -3,3 +3,7 @@ varReference:
     kind: Deployment
   - path: data
     kind: ConfigMap
+  - kind: Certificate
+    path: spec/commonName
+  - kind: Certificate
+    path: spec/dnsNames
